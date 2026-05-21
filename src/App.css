@@ -1485,3 +1485,45 @@
     max-width: 100%;
   }
 }
+/* FINAL MOBILE HEIGHT FIX */
+
+@media screen and (max-width: 768px) {
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .app {
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .chat-window {
+    flex: 1;
+    height: auto;
+    min-height: 0;
+  }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+  }
+
+  .sidebar {
+    max-height: 100px;
+    flex-shrink: 0;
+  }
+
+  .input-box {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  .chat-window.dark .input-box {
+    background: #2d2d44;
+  }
+}
