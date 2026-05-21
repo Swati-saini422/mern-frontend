@@ -53,32 +53,34 @@ function ChatWindow({ messages: initialMessages, onMessagesUpdate, voiceSpeed, d
       };
     }
   }, []);
-
-  // Update stats
-  useEffect(() => {
-  updateStats();
-  }, [messages, updateStats]);
-
-  // Auto-scroll to bottom
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  // Persist messages
-  useEffect(() => {
-    if (onMessagesUpdate) {
-      onMessagesUpdate(messages);
-    }
-  }, [messages, onMessagesUpdate]);
-
   const updateStats = React.useCallback(() => {
   const userCount = messages.filter(m => m.sender === "user").length;
   const botCount = messages.filter(m => m.sender === "bot").length;
-  const totalChars = messages.reduce((sum, m) => sum + (m.text ? m.text.length : 0), 0);
+  const totalChars = messages.reduce(
+    (sum, m) => sum + (m.text ? m.text.length : 0),
+    0
+  );
 
   setMessageStats({ userCount, botCount, totalChars });
   setPinnedMessages(messages.filter(m => m.pinned));
-  }, [messages]);
+}, [messages]);
+
+// Update stats
+useEffect(() => {
+  updateStats();
+}, [messages, updateStats]);
+
+// Auto-scroll to bottom
+useEffect(() => {
+  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+}, [messages]);
+
+// Persist messages
+useEffect(() => {
+  if (onMessagesUpdate) {
+    onMessagesUpdate(messages);
+  }
+}, [messages, onMessagesUpdate]);
 
   const startVoice = () => {
     if (recognition.current && !isRecording) {
