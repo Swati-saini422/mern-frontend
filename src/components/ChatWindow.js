@@ -14,7 +14,6 @@ function ChatWindow({ messages: initialMessages, onMessagesUpdate, voiceSpeed, d
   const [searchTerm, setSearchTerm] = useState("");
   const [editingId, setEditingId] = useState(null);
   const [editText, setEditText] = useState("");
-  const [showEmojiPicker, setShowEmojiPicker] = useState(null);
   const [fullscreenMode, setFullscreenMode] = useState(false);
   const [pinnedMessages, setPinnedMessages] = useState([]);
   const [messageStats, setMessageStats] = useState({ userCount: 0, botCount: 0, totalChars: 0 });
@@ -57,8 +56,8 @@ function ChatWindow({ messages: initialMessages, onMessagesUpdate, voiceSpeed, d
 
   // Update stats
   useEffect(() => {
-    updateStats();
-  }, [messages]);
+  updateStats();
+  }, [messages, updateStats]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -72,13 +71,14 @@ function ChatWindow({ messages: initialMessages, onMessagesUpdate, voiceSpeed, d
     }
   }, [messages, onMessagesUpdate]);
 
-  const updateStats = () => {
-    const userCount = messages.filter(m => m.sender === "user").length;
-    const botCount = messages.filter(m => m.sender === "bot").length;
-    const totalChars = messages.reduce((sum, m) => sum + (m.text ? m.text.length : 0), 0);
-    setMessageStats({ userCount, botCount, totalChars });
-    setPinnedMessages(messages.filter(m => m.pinned));
-  };
+  const updateStats = React.useCallback(() => {
+  const userCount = messages.filter(m => m.sender === "user").length;
+  const botCount = messages.filter(m => m.sender === "bot").length;
+  const totalChars = messages.reduce((sum, m) => sum + (m.text ? m.text.length : 0), 0);
+
+  setMessageStats({ userCount, botCount, totalChars });
+  setPinnedMessages(messages.filter(m => m.pinned));
+  }, [messages]);
 
   const startVoice = () => {
     if (recognition.current && !isRecording) {
